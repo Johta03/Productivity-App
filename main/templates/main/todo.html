@@ -1,0 +1,247 @@
+{%extends 'main/base.html'%}
+
+{%block title%}
+{%endblock%}
+
+
+{%block content%}
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&display=swap');
+    .body.todo{
+        font-family: 'Rubik', sans-serif;
+    }
+
+    .container-outline {
+        border: 1px solid #d6d6d6;
+        border-radius: 15px;
+        padding: 25px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .title-styles {
+        font-family: 'Rubik', sans-serif;
+        font-weight: 500;
+    }
+
+    .outline {
+        border: 1px solid #d6d6d6;
+        border-radius: 15px;
+        padding: 20px;
+    }
+
+    .header {
+        margin-bottom: 40px;
+    }
+
+    .btn:hover {
+        border-color: #2f2bb6;
+        /* other styles for hover state */
+    }
+
+    .container-outline {
+        margin-bottom: 2%;
+        /* Set a percentage-based gap */
+    }
+
+    @media (max-width: 768px) {
+        .container-outline {
+            margin-bottom: 5%;
+        }
+    
+    }
+    .completed-task {
+        text-decoration: line-through;
+    }
+
+</style>
+
+<body class="todo">
+    <!----Header---->
+    <h1 class="header">To Do List</h1>
+
+    <!----Today Tasks Container---->
+    <div class="container-outline" style="font-weight:500;">
+        <h2 class="title-styles">Today</h2>
+
+        <div id="buttonContainer1" style="margin-bottom:2%;">
+            <button type="button" class="btn btn-lg outline w-100 fs-6 mt-3"
+              style="color: #898989; font-family: 'Rubik', sans-serif; font-weight: 400; text-align: left;"
+              onclick="replaceWithForm('buttonContainer1', 'formContainer1')">
+              <i class="fa-solid fa-plus fa-lg" style="margin-right: 7px;"></i> Add New Task
+            </button>
+          </div>
+          
+          <div id="formContainer1" style="display: none; margin-bottom:2%;">
+            <form method="POST" action="{%url 'todo'%}">
+              {%csrf_token%}
+              
+              <input name="task1" id="taskInput1" type="text" class="btn-lg outline w-100 fs-6 mt-3"
+              style="color: #898989; font-family: 'Rubik', sans-serif; font-weight: 400; text-align: left; margin-bottom:2%;"
+              placeholder="Enter Task Title"/>
+  
+              <button type="button" class="btn outline" style="padding: 0.8em; width: 15%;" 
+              onclick="cancelOut('buttonContainer1', 'formContainer1', 'taskInput1')">
+                  Cancel
+              </button>
+              <button name="newItem1" value="newItem1" type="submit" class="btn btn-primary outline" style="padding: 0.8em; width: 15%; margin-left: 1%;"
+              onclick="handleFormSubmit('buttonContainer1', 'formContainer1', 'taskInput1')">
+              Add
+          </button>
+              
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}        
+            <div class="row"> 
+                <div class="col">
+                    <div class="list-group list-group-flush">
+                        {% for t in today %}
+                            <div class="list-group-item d-flex justify-content-between align-items-center" style="color:black; margin-bottom:1%;">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="task{{ forloop.counter }}" onchange="toggleTask(this,1)">
+                                    <label class="form-check-label" for="task{{ forloop.counter }}">
+                                        <span id="taskText{{ forloop.counter }}">{{ t.task }}</span>
+                                    </label>
+                                </div>
+                                <a href="{% url 'delete_task' t.id %}" title="Delete">
+                                    <i class="far fa-trash-alt"></i>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </form>
+        
+
+      </div>
+      
+    <!----Upcoming Tasks Container---->
+    <div class="container-outline" style="font-weight:500;">
+        <h2 class="title-styles">Upcoming</h2>
+            <div id="buttonContainer2"  style="margin-bottom:2%;">
+                <button type="button" class="btn btn-lg outline w-100 fs-6 mt-3"
+                    style="color: #898989; font-family: 'Rubik', sans-serif; font-weight: 400; text-align: left;"
+                    onclick="replaceWithForm('buttonContainer2', 'formContainer2', 'taskInput2')">
+                    <i class="fa-solid fa-plus fa-lg" style="margin-right: 7px;"></i> Add New Task
+                </button>
+            </div>
+
+            <div id="formContainer2" style="display: none; margin-bottom:2%;">
+                <form method="POST" action="{%url 'todo'%}">
+                    {%csrf_token%}
+
+                    <input name="task2" id="taskInput2" type="text" class="btn-lg outline w-100 fs-6 mt-3"
+                        style="color: #898989; font-family: 'Rubik', sans-serif; font-weight: 400; text-align: left; margin-bottom:2%;"
+                        placeholder="Enter Task Title"/>
+
+                  <!-- Your form fields go here -->
+                    <button type="button" class="btn outline" style="padding: 0.8em; width: 15%;" 
+                    onclick="cancelOut('buttonContainer2', 'formContainer2','taskInput2')"> 
+                        Cancel
+                    </button>
+                    
+                    <button name="newItem2" value = "newItem2" type="submit" class="btn btn-primary outline" style="padding: 0.8em; width: 15%; margin-left: 1%;"
+                    onclick="handleFormSubmit('buttonContainer2', 'formContainer2', 'taskInput2')">
+                        Add
+                    </button>
+                </form>
+
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}        
+                <div class="row"> 
+                    <div class="col">
+                        <div class="list-group list-group-flush">
+                            {% for u in upcoming %}
+                                <div class="list-group-item d-flex justify-content-between align-items-center" style="color:black; margin-bottom:1%;">
+                                        <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="task{{ forloop.counter }}" onchange="toggleTask(this,2)">
+                                                <label class="form-check-label" for="task{{ forloop.counter }}">
+                                                    <span name ="Item" id="taskText2{{ forloop.counter }}">{{ u.task }}</span>
+                                                </label>
+                                            </div>
+                                            <a href="{% url 'delete_task' u.id %}" title="Delete">
+                                                <i class="far fa-trash-alt"></i>
+                                            </a>
+                                        </div>
+                                    
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </form>
+            
+            
+
+        </div>
+    </div>
+    <script>
+
+        
+        function replaceWithForm(buttonContainerID, formContainerID) {
+            var buttonContainer = document.getElementById(buttonContainerID);
+            var formContainer = document.getElementById(formContainerID);
+    
+            buttonContainer.style.display = 'none';
+            formContainer.style.display = 'block';
+    
+            // Store form visibility status in local storage
+            localStorage.setItem(formContainerID + 'Visible', 'true');
+        }
+    
+        function cancelOut(buttonContainerID, formContainerID, taskInputID) {
+            var buttonContainer = document.getElementById(buttonContainerID);
+            var formContainer = document.getElementById(formContainerID);
+            var taskInput = document.getElementById(taskInputID);
+    
+            buttonContainer.style.display = 'block';
+            formContainer.style.display = 'none';
+    
+            // Store form visibility status in local storage
+            localStorage.setItem(formContainerID + 'Visible', 'false');
+        }
+        
+        function handleFormSubmit(buttonContainerID, formContainerID, taskInputID) {
+            cancelOut(buttonContainerID,formContainerID,taskInputID)
+            addTask(formContainerID, taskInputID);
+          }
+          
+        function addTask(formContainerID, buttonContainerID) {
+          var form = document.getElementById(formContainerID);
+          var taskInput = document.getElementById(taskInputID);
+        
+          // Perform any necessary actions before adding the task
+        
+          // Submit the form
+          form.submit();
+        }
+
+        function toggleTask(checkbox, ID) {
+            if (ID === 1) {
+                var taskText = document.getElementById("taskText" + checkbox.id.slice(4)); // Extract the taskText element
+            }
+            else if (ID === 2) {
+                var taskText = document.getElementById("taskText2" + checkbox.id.slice(4));
+            }
+            if (checkbox.checked) {
+                taskText.classList.add("completed-task"); // Add the completed-task class to apply line-through style
+            } else {
+                taskText.classList.remove("completed-task"); // Remove the completed-task class to remove line-through style
+            }
+
+        }
+    </script>
+
+      
+      
+      
+      
+    
+    
+</body>
+
+{%endblock%}
