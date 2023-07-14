@@ -1,23 +1,485 @@
 {%extends 'main/base.html'%}
+{%load static%}
 
 {%block title%}
 Pomodoro Timer
 {%endblock%}
 
 {%block content%}
-<style>      
-      
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomodoro Timer</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+</head>
+<style>
+    #feh-pomodoro {
+        position: relative;
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 55px 25px 25px 25px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.29);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(7.7px);
+        -webkit-backdrop-filter: blur(7.7px);
+        border: 1px solid rgba(0, 0, 0, 0.64);
+        margin-top: 5%;
+    }
+
+    #feh-pomodoro-overlay {
+        background: #fff;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        border-radius: 20px;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease-in-out;
+    }
+
+    body.page-loaded #feh-pomodoro-overlay {
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    #feh-pomodoro-overlay img {
+        width: 150px;
+        height: 150px;
+    }
+
+    .btn-icon {
+        border-radius: 20px;
+        position: absolute;
+        right: 0;
+        width: 50px;
+        display: flex;
+        font-size: 24px;
+        justify-content: center;
+        color: #7b7b7b;
+        padding-top: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+    }
+
+    #feh-toggle-settings {
+        top: 20px;
+        right: 20px;
+        height: 50px;
+    }
+
+    #feh-timer-progress {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 40px;
+    }
+
+    .circle-timer {
+        width: 270px;
+        height: 270px;
+    }
+
+    .circle-background {
+        stroke:#e1e1e3;
+        stroke-width: 7;
+        fill: none;
+    }
+
+    .circle-progress {
+        stroke: #353cff;
+        stroke-width: 7;
+        stroke-dasharray: 283;
+        stroke-linecap: round;
+        fill: none;
+        transform-origin: 50% 50%;
+        transform: rotate(-90deg);
+    }
+
+    #feh-timer-time {
+        fill: #5c5c5c;
+    }
+
+    #feh-timer-rest,
+    #feh-timer-pause{
+        opacity: 0;
+        transition: all 0.3s ease-in-out;
+        fill: #5c5c5cd1;
+    }
+
+    #feh-timer-sessions {
+        border-radius: 50px;
+        background: #ededed;
+        display: flex;
+        color: #5c5c5cb8;
+        align-items: center;
+        transition: all 0.3s ease-in-out;
+    }
+
+    #feh-timer-sessions p {
+        padding: 12px;
+    }
+
+    p#feh-completed-label {
+        width: 80%;
+        text-align: center
+    }
+
+    p#feh-completed-sessions {
+        font-weight: bold;
+        color: #222;
+        font-size: 20px;
+    }
+
+    #feh-timer-functions {
+        height: 145px;
+        position: relative;
+
+    }
+
+    #feh-timer-settings {
+        transition: all 0.3s ease-in-out;
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    #feh-close-settings {
+        top: -60px;
+        height: 80px;
+        background: #353cff;
+        color: #f7ddd7;
+    }
+
+    #feh-close-settings:hover {
+        color: #fff;
+    }
+
+    #feh-timer-form {
+        border-radius: 20px;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 20px;
+        background: #353cff;
+        z-index: 1;
+    }
+
+    .feh-timer-line {
+        display: flex;
+    }
+
+    .feh-timer-line:last-child {
+        margin-top: 20px;
+    }
+
+    .feh-timer-line * {
+        font-size: 18px;
+    }
+
+    .feh-timer-line label {
+        width: 50%;
+        color: #ffffffc7;
+        padding: 6px 0px 6px 0px;
+    }
+
+    .feh-timer-line input {
+        background: #fff;
+        color: #5c5c5c;
+        width: 50%;
+        border: 0px none;
+        margin-left: -2px;
+        border-radius: 10px;
+        text-align: center;
+    }
+
+    #feh-timer-form input::-webkit-outer-spin-button,
+    #feh-timer-form input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+    }
+
+    #feh-timer-form input[type=number] {
+        -moz-appearance: textfield;
+    }
+
+    #feh-timer-buttons {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.3s ease-in-out;
+    }
+
+    #feh-timer-buttons button {
+        background-color: #353cff;
+        position: absolute;
+        border: none;
+        border-radius: 100px;
+        cursor: pointer;
+        width: 60px;
+        height: 60px;
+        margin: 0 auto;
+        display: block;
+        font-size: 22px;
+        color: #fff;
+    }
+
+    body.timer-running #start-btn {
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    body.timer-paused #start-btn {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    body.timer-paused:not(.rest-mode) #feh-timer-pause,
+    body.rest-mode #feh-timer-rest,
+    body.rest-mode.timer-paused #feh-timer-pause{
+        opacity: 1;
+    }
+
+    body.rest-mode.timer-paused #feh-timer-rest{
+        opacity: 0;
+    }
+
+    body.settings-active #feh-timer-settings {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    body.settings-active #feh-timer-sessions,
+    body.settings-active #feh-timer-buttons {
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    body.rest-mode .circle-progress {
+        stroke: #fd525385;
+    }
+
+    body.timer-running .circle-progress {
+        transition: all 1s linear;
+    }
 </style>
-<body>
+
+<body style="font-weight:600;">
     <h1>Pomodoro Timer</h1>
-    <div class="container">
-         
+    <div id="feh-pomodoro">
+        <div id="feh-pomodoro-overlay">
+            <img src="{% static 'images/spinner.gif' %}" alt="">
+        </div>
+
+        <span class="btn-icon" id="feh-toggle-settings">
+            <i class="fa fa-cog"></i>
+        </span>
+
+        <div id="feh-timer-progress">
+            <svg class="circle-timer" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" class="circle-background" />
+                <circle cx="50" cy="50" r="45" class="circle-progress" />
+                <text id="feh-timer-time" x="50" y="50" text-anchor="middle" dy=".3em" font-size="18">00:00</text>
+                <text id="feh-timer-pause" x="50" y="68" text-anchor="middle" dy=".3em" font-size="7">Paused</text>
+                <text id="feh-timer-rest" x="50" y="68" text-anchor="middle" dy=".3em" font-size="7">Rest</text>
+            </svg>
+        </div>
+
+        <div id="feh-timer-sessions">
+            <p id="feh-completed-label">Completed work sessions: </p>
+            <p id="feh-completed-sessions">0</p>
+        </div>
+
+        <div id="feh-timer-functions">
+            <div id="feh-timer-settings">
+                <span class="btn-icon" id="feh-close-settings"><i class="fa fa-times"></i></span>
+
+                <form id="feh-timer-form">
+                    <p class="feh-timer-line">
+                        <label for="work-duration">Focus Time:</label>
+                        <input type="number" id="work-duration" value="25" min="1">
+                    </p>
+                    <p class="feh-timer-line">
+                        <label for="rest-duration">Rest Time:</label>
+                        <input type="number" id="rest-duration" value="5" min="1">
+                    </p>
+                </form>
+            </div>
+
+            <div id="feh-timer-buttons">
+                <button id="pause-btn"><i class="fa fa-pause"></i></button>
+                <button id="start-btn"><i class="fa fa-play"></i></button>
+            </div>
+        </div>
     </div>
 
-<script>
+    <script>
+        (function () {
 
-</script>
+            const fehBody = document.body;
+            const workDurationInput = document.getElementById("work-duration");
+            const restDurationInput = document.getElementById("rest-duration");
+            const timerTime = document.getElementById("feh-timer-time");
+            const circleProgress = document.querySelector('.circle-progress');
+
+            let workDuration = parseInt(workDurationInput.value) * 60;
+            let restDuration = parseInt(restDurationInput.value) * 60;
+            let remainingTime = workDuration;
+            let isPaused = true;
+            let isWorking = true;
+            let intervalId;
+
+            const completedSessionsElement = document.getElementById('feh-completed-sessions');
+            let completedSessions = 0;
+
+            window.addEventListener("load", () => {
+                fehBody.classList.add('page-loaded');
+            })
+
+            const startBtn = document.getElementById("start-btn");
+            startBtn.addEventListener("click", () => {
+                isPaused = false;
+
+                fehBody.classList.add('timer-running');
+
+                if (isWorking) {
+                    fehBody.classList.remove('timer-paused');
+                }
+                else {
+                    fehBody.classList.add('rest-mode');
+                    fehBody.classList.remove('timer-paused');
+                }
+
+                if (!intervalId) {
+                    intervalId = setInterval(updateTimer, 1000);
+                }
+            });
+
+            const pauseBtn = document.getElementById("pause-btn");
+            pauseBtn.addEventListener("click", () => {
+                isPaused = true;
+
+                fehBody.classList.remove('timer-running');
+                fehBody.classList.add('timer-paused');
+
+            });
+
+
+            const btnToggleSettings = document.getElementById("feh-toggle-settings");
+            const btnCloseSettings = document.getElementById("feh-close-settings");
+
+            function setBodySettings() {
+                fehBody.classList.contains('settings-active') ? fehBody.classList.remove('settings-active') : fehBody.classList.add('settings-active')
+            }
+
+            function toggleSettings() {
+                if (event.type === 'click') {
+                    setBodySettings();
+                }
+                else if (event.type === 'keydown' && event.keyCode === 27) {
+                    fehBody.classList.remove('settings-active');
+                }
+            }
+
+            btnToggleSettings.addEventListener('click', toggleSettings);
+            btnCloseSettings.addEventListener('click', toggleSettings);
+            document.addEventListener('keydown', toggleSettings);
+
+
+            workDurationInput.addEventListener("change", () => {
+                workDuration = parseInt(workDurationInput.value) * 60;
+                if (isWorking) {
+                    remainingTime = workDuration;
+                    updateProgress();
+                }
+            });
+
+            restDurationInput.addEventListener("change", () => {
+                restDuration = parseInt(restDurationInput.value) * 60;
+                if (!isWorking) {
+                    remainingTime = restDuration;
+                    updateProgress();
+                }
+            });
+
+
+            function updateTimer() {
+                let playAlarm;
+                const workFinished = new Audio("{% static '/music/success-fanfare-trumpets-6185.mp3' %}");
+                const restFinished = new Audio("{% static '/music/error-when-entering-the-game-menu-132111.mp3' %}");
+
+                if (!isPaused) {
+
+                    remainingTime--;
+
+
+                    if (remainingTime <= 0) {
+                        isWorking = !isWorking;
+                        remainingTime = isWorking ? workDuration : restDuration;
+
+                        if (!isWorking) {
+                            fehBody.classList.add('rest-mode');
+                            fehBody.classList.remove('timer-running');
+
+                            completedSessions++;
+                            completedSessionsElement.textContent = completedSessions;
+                        }
+                        else {
+                            fehBody.classList.remove('rest-mode');
+                            fehBody.classList.remove('timer-running');
+                        }
+                        playAlarm = isWorking ? restFinished : workFinished;
+                        playAlarm.play();
+
+                        isPaused = false;
+                        fehBody.classList.remove('timer-work-active');
+                    }
+                    document.title = timerTime.textContent = formatTime(remainingTime);
+                    updateProgress();
+
+                }
+            }
+
+            function updateProgress() {
+                const radius = 45;
+                const circumference = 2 * Math.PI * radius;
+
+                const totalDuration = isWorking ? workDuration : restDuration;
+                const dashOffset = circumference * remainingTime / totalDuration;
+
+                circleProgress.style.strokeDashoffset = dashOffset;
+                timerTime.textContent = formatTime(remainingTime);
+            }
+
+            function formatTime(seconds) {
+                const minutes = Math.floor(seconds / 60);
+                const remainingSeconds = seconds % 60;
+                return `${minutes.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
+            }
+
+            // Now run this updateProgress function on load
+            updateProgress();
+        })();
+
+    </script>
+
 </body>
+
+</html>
+
+
 
 
 {%endblock%}
