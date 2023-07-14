@@ -109,7 +109,7 @@
 
     editableDiv.addEventListener('input', function () {
       const updatedTitle = editableDiv.innerText.trim();
-      const updatedContent = editorContainer.innerText;
+      const updatedContent = editorContainer.innerHTML;
       const pageKey = generateKey();
       const noteId = extractNoteId(pageKey);
 
@@ -139,9 +139,8 @@
     });
 
 
-
     editorContainer.addEventListener('input', function () {
-      const updatedContent = editorContainer.innerText;
+      const updatedContent = editorContainer.innerHTML; // Use innerHTML instead of innerText
       const pageKey = generateKey();
       const noteId = extractNoteId(pageKey);
 
@@ -180,6 +179,35 @@
       }
     });
 
+
+    // Save content function
+    function saveContent() {
+      const updatedContent = editorContainer.innerHTML; // Use innerHTML instead of innerText
+      const pageKey = generateKey();
+      const noteId = extractNoteId(pageKey);
+
+      if (noteId) {
+        localStorage.setItem(pageKey + '_content', updatedContent); // Store content as HTML
+
+        // Update the note content in the database
+        fetch(`/update-note/${noteId}/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+          },
+          body: JSON.stringify({ content: updatedContent, noteId: noteId }),
+        })
+          .then((response) => response.json())
+          .then((data) => console.log(data))
+          .catch((error) => console.log(error));
+      }
+    }
+
+    // Event listener to save content when changes are made
+    quill.on('text-change', function () {
+      saveContent();
+    });
   </script>
 
 
