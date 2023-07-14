@@ -2,8 +2,6 @@ from django.shortcuts import render, redirect,get_object_or_404
 from .models import ToDoList, Notes
 from django.http import JsonResponse
 import json
-# Create your views here.
-
 
 def todo(request):
     if request.method == 'POST':
@@ -63,26 +61,6 @@ def delete_note(request, note_id):
     note_to_delete.delete()
     return redirect("/notes")
 
-#def update_note(request):
-#    if request.method == 'POST':
-#        try:
-#            data = json.loads(request.body)
-#            title = data.get('title')
-#            content = data.get('content')
-#
-#            # Update the user's note in the database
-#            note = Notes.objects.get(user=request.user)
-#            note.title = title
-#            note.content = content
-#            note.save()
-#
-#            return JsonResponse({'message': 'Note updated successfully.'})
-#        except json.JSONDecodeError:
-#            return JsonResponse({'error': 'Invalid JSON data.'}, status=400)
-#    else:
-#        return JsonResponse({'error': 'Invalid request method.'}, status=405)
-    
-
 def update_note(request, note_id=None):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -108,10 +86,6 @@ def update_note(request, note_id=None):
             return JsonResponse({'status': 'error', 'message': 'Note not found'})
     return JsonResponse({'status': 'error', 'message': 'Invalid request'})
 
-
-
-
-    
 def timer(request):
     return render(request, 'main/timer.html',{})
 
