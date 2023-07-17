@@ -6,68 +6,17 @@
 
 {%block content%}
 
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&display=swap');
-    .body.todo{
-        font-family: 'Rubik', sans-serif;
-    }
-
-    .container-outline {
-        border: 1px solid #d6d6d6;
-        border-radius: 15px;
-        padding: 25px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .title-styles {
-        font-family: 'Rubik', sans-serif;
-        font-weight: 500;
-    }
-
-    .outline {
-        border: 1px solid #d6d6d6;
-        border-radius: 15px;
-        padding: 20px;
-    }
-
-    .header {
-        margin-bottom: 40px;
-    }
-
-    .btn:hover {
-        border-color: #2f2bb6;
-        /* other styles for hover state */
-    }
-
-    .container-outline {
-        margin-bottom: 2%;
-        /* Set a percentage-based gap */
-    }
-
-    @media (max-width: 768px) {
-        .container-outline {
-            margin-bottom: 5%;
-        }
-    
-    }
-    .completed-task {
-        text-decoration: line-through;
-    }
-
-</style>
-
-<body class="todo">
+<body id="todos">
     <!----Header---->
     <h1 class="header">To Do List</h1>
 
     <!----Today Tasks Container---->
-    <div class="container-outline" style="font-weight:500;">
+    <div class="container-outline" style="font-weight:500; margin-bottom: 2%;">
         <h2 class="title-styles">Today</h2>
 
         <div id="buttonContainer1" style="margin-bottom:2%;">
             <button type="button" class="btn btn-lg outline w-100 fs-6 mt-3"
-              style="color: #898989; font-family: 'Rubik', sans-serif; font-weight: 400; text-align: left;"
+              style="color: #898989; font-family: 'Rubik', sans-serif; font-weight: 400; text-align: left;padding: 20px;"
               onclick="replaceWithForm('buttonContainer1', 'formContainer1')">
               <i class="fa-solid fa-plus fa-lg" style="margin-right: 7px;"></i> Add New Task
             </button>
@@ -78,14 +27,14 @@
               {%csrf_token%}
               
               <input name="task1" id="taskInput1" type="text" class="btn-lg outline w-100 fs-6 mt-3"
-              style="color: #898989; font-family: 'Rubik', sans-serif; font-weight: 400; text-align: left; margin-bottom:2%;"
+              style="color: #898989; font-family: 'Rubik', sans-serif; font-weight: 400; text-align: left; margin-bottom:2%;padding: 20px;"
               placeholder="Enter Task Title"/>
   
-              <button type="button" class="btn outline" style="padding: 0.8em; width: 15%;" 
+              <button type="button" class="btn outline" style="padding: 0.8em; width: 15%;padding: 20px;" 
               onclick="cancelOut('buttonContainer1', 'formContainer1', 'taskInput1')">
                   Cancel
               </button>
-              <button name="newItem1" value="newItem1" type="submit" class="btn btn-primary outline" style="padding: 0.8em; width: 15%; margin-left: 1%;"
+              <button name="newItem1" value="newItem1" type="submit" class="btn btn-primary outline" style="padding: 0.8em; width: 15%; margin-left: 1%;padding: 20px;"
               onclick="handleFormSubmit('buttonContainer1', 'formContainer1', 'taskInput1')">
               Add
           </button>
@@ -102,7 +51,7 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" id="task{{ forloop.counter }}" onchange="toggleTask(this,1)">
                                     <label class="form-check-label" for="task{{ forloop.counter }}">
-                                        <span id="taskText{{ forloop.counter }}">{{ t.task }}</span>
+                                        <span id="taskText{{ forloop.counter }}" style="font-family: 'Poppins', san-serif; font-weight:500">{{ t.task }}</span>
                                     </label>
                                 </div>
                                 <a href="{% url 'delete_task' t.id %}" title="Delete">
@@ -119,11 +68,11 @@
       </div>
       
     <!----Upcoming Tasks Container---->
-    <div class="container-outline" style="font-weight:500;">
+    <div class="container-outline"  style="font-weight:500; margin-bottom: 2%;">
         <h2 class="title-styles">Upcoming</h2>
             <div id="buttonContainer2"  style="margin-bottom:2%;">
                 <button type="button" class="btn btn-lg outline w-100 fs-6 mt-3"
-                    style="color: #898989; font-family: 'Rubik', sans-serif; font-weight: 400; text-align: left;"
+                    style="color: #898989; font-family: 'Rubik', sans-serif; font-weight: 400; text-align: left;padding: 20px;"
                     onclick="replaceWithForm('buttonContainer2', 'formContainer2', 'taskInput2')">
                     <i class="fa-solid fa-plus fa-lg" style="margin-right: 7px;"></i> Add New Task
                 </button>
@@ -134,16 +83,16 @@
                     {%csrf_token%}
 
                     <input name="task2" id="taskInput2" type="text" class="btn-lg outline w-100 fs-6 mt-3"
-                        style="color: #898989; font-family: 'Rubik', sans-serif; font-weight: 400; text-align: left; margin-bottom:2%;"
+                        style="color: #898989; font-family: 'Rubik', sans-serif; font-weight: 400; text-align: left; margin-bottom:2%;padding: 20px;"
                         placeholder="Enter Task Title"/>
 
                   <!-- Your form fields go here -->
-                    <button type="button" class="btn outline" style="padding: 0.8em; width: 15%;" 
+                    <button type="button" class="btn outline" style="padding: 0.8em; width: 15%;padding: 20px;" 
                     onclick="cancelOut('buttonContainer2', 'formContainer2','taskInput2')"> 
                         Cancel
                     </button>
                     
-                    <button name="newItem2" value = "newItem2" type="submit" class="btn btn-primary outline" style="padding: 0.8em; width: 15%; margin-left: 1%;"
+                    <button name="newItem2" value = "newItem2" type="submit" class="btn btn-primary outline" style="padding: 0.8em; width: 15%; margin-left: 1%;padding: 20px;"
                     onclick="handleFormSubmit('buttonContainer2', 'formContainer2', 'taskInput2')">
                         Add
                     </button>
@@ -161,14 +110,13 @@
                                         <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" id="task{{ forloop.counter }}" onchange="toggleTask(this,2)">
                                                 <label class="form-check-label" for="task{{ forloop.counter }}">
-                                                    <span name ="Item" id="taskText2{{ forloop.counter }}">{{ u.task }}</span>
+                                                    <span name ="Item" id="taskText2{{ forloop.counter }}" style="font-family: 'Poppins', san-serif; font-weight:500">{{ u.task }}</span>
                                                 </label>
                                             </div>
                                             <a href="{% url 'delete_task' u.id %}" title="Delete">
                                                 <i class="far fa-trash-alt"></i>
                                             </a>
                                         </div>
-                                    
                             {% endfor %}
                         </div>
                     </div>
