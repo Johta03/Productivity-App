@@ -14,16 +14,18 @@
     <div class="container-outline" style="font-weight:500; margin-bottom: 2%;">
         <h2 class="title-styles">Today</h2>
 
+        <!--- Add task button container -->
         <div id="buttonContainer1" style="margin-bottom:2%;">
             <button type="button" class="btn btn-lg outline w-100 fs-6 mt-3"
               style="color: #898989; font-family: 'Rubik', sans-serif; font-weight: 400; text-align: left;padding: 20px;"
-              onclick="replaceWithForm('buttonContainer1', 'formContainer1')">
+              onclick="replaceWithForm('buttonContainer1', 'formContainer1')"> <!--- When button is clicked, replace button with form -->
               <i class="fa-solid fa-plus fa-lg" style="margin-right: 7px;"></i> Add New Task
             </button>
           </div>
           
+          <!--- Add task form container -->
           <div id="formContainer1" style="display: none; margin-bottom:2%;">
-            <form method="POST" action="{%url 'todo'%}">
+            <form method="POST" action="{%url 'todo'%}"> <!--- contents of the form is posted to the todo function  in views.py -->
               {%csrf_token%}
               
               <input name="task1" id="taskInput1" type="text" class="btn-lg outline w-100 fs-6 mt-3"
@@ -41,6 +43,7 @@
               
         </div>
 
+        <!--- Display all "Today" todo tasks -->
         <form method="POST">
             {% csrf_token %}        
             <div class="row"> 
@@ -49,11 +52,12 @@
                         {% for t in today %}
                             <div class="list-group-item d-flex justify-content-between align-items-center" style="color:black; margin-bottom:1%;">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="task{{ forloop.counter }}" onchange="toggleTask(this,1)">
+                                    <input class="form-check-input" type="checkbox" id="task{{ forloop.counter }}" onchange="toggleTask(this,1)"> <!--- Line through task -->
                                     <label class="form-check-label" for="task{{ forloop.counter }}">
                                         <span id="taskText{{ forloop.counter }}" style="font-family: 'Poppins', san-serif; font-weight:500">{{ t.task }}</span>
                                     </label>
                                 </div>
+                                <!--- Delete task Icon -->
                                 <a href="{% url 'delete_task' t.id %}" title="Delete">
                                     <i class="far fa-trash-alt"></i>
                                 </a>
@@ -70,6 +74,8 @@
     <!----Upcoming Tasks Container---->
     <div class="container-outline"  style="font-weight:500; margin-bottom: 2%;">
         <h2 class="title-styles">Upcoming</h2>
+
+            <!--- Add task button container -->
             <div id="buttonContainer2"  style="margin-bottom:2%;">
                 <button type="button" class="btn btn-lg outline w-100 fs-6 mt-3"
                     style="color: #898989; font-family: 'Rubik', sans-serif; font-weight: 400; text-align: left;padding: 20px;"
@@ -100,6 +106,7 @@
 
             </div>
 
+            <!--- Display all "Upcoming" todo tasks -->
             <form method="POST">
                 {% csrf_token %}        
                 <div class="row"> 
@@ -108,11 +115,12 @@
                             {% for u in upcoming %}
                                 <div class="list-group-item d-flex justify-content-between align-items-center" style="color:black; margin-bottom:1%;">
                                         <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="task{{ forloop.counter }}" onchange="toggleTask(this,2)">
+                                                <input class="form-check-input" type="checkbox" id="task{{ forloop.counter }}" onchange="toggleTask(this,2)"> <!--- Line through task -->
                                                 <label class="form-check-label" for="task{{ forloop.counter }}">
                                                     <span name ="Item" id="taskText2{{ forloop.counter }}" style="font-family: 'Poppins', san-serif; font-weight:500">{{ u.task }}</span>
                                                 </label>
                                             </div>
+                                            <!--- Delete task Icon -->
                                             <a href="{% url 'delete_task' u.id %}" title="Delete">
                                                 <i class="far fa-trash-alt"></i>
                                             </a>
@@ -127,6 +135,8 @@
 
         </div>
     </div>
+
+    <!--- Load JavaScript code -->
     <script src="{% static 'js/todo.js' %}"></script>
 
 </body>

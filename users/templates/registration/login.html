@@ -33,7 +33,7 @@
 <!---Login container--->
     <div class="row border rounded-5 p-3 bg-white shadow box-area">
 
-<!---Right Box--->
+        <!---Left Box--->
         <div class="col-md-6 rounded-4 d-flex justify-content-center align-items-center flex-column left-box" style="background: #103cbe;">
             <div class="featured-image mb-3">
                 <img src= "{% static 'images/1.png' %}" class="img-fluid" style="width: 250px;">
@@ -42,7 +42,8 @@
                 Welcome back!
             </p>
         </div>
-<!---Left Box--->
+
+        <!---Right Box--->
         <div class="col-md-6  right-box">
             <div class="row align-items-center">
                 <div class="header-text mb-1">
@@ -50,6 +51,7 @@
                     <p>Please enter your login details below</p>
                 </div>
                 
+                <!---Login Form --->
                 {%load crispy_forms_tags%}
                 <form method="POST" class="form-group">
                     {%csrf_token%}

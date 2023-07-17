@@ -20,15 +20,20 @@ Pomodoro Timer
 
 <body style="font-weight:600;">
     <h1>Pomodoro Timer</h1>
+
+     <!--- Pomodoro Container -->
     <div id="feh-pomodoro">
+        <!--- Pomodoro overlay -->
         <div id="feh-pomodoro-overlay">
             <img src="{% static 'images/spinner.gif' %}" alt="">
         </div>
 
+        <!--- Settings display -->
         <span class="btn-icon" id="feh-toggle-settings">
             <i class="fa fa-cog"></i>
         </span>
 
+        <!--- Timer display -->
         <div id="feh-timer-progress">
             <svg class="circle-timer" viewBox="0 0 100 100">
                 <circle cx="50" cy="50" r="45" class="circle-background" />
@@ -39,11 +44,13 @@ Pomodoro Timer
             </svg>
         </div>
 
+        <!--- Timer sessions display -->
         <div id="feh-timer-sessions">
             <p id="feh-completed-label">Completed work sessions: </p>
             <p id="feh-completed-sessions">0</p>
         </div>
 
+        <!--- Timer settings display -->
         <div id="feh-timer-functions">
             <div id="feh-timer-settings">
                 <span class="btn-icon" id="feh-close-settings"><i class="fa fa-times"></i></span>
@@ -60,6 +67,7 @@ Pomodoro Timer
                 </form>
             </div>
 
+            <!--- Timer Play/Pause buttons -->
             <div id="feh-timer-buttons">
                 <button id="pause-btn"><i class="fa fa-pause"></i></button>
                 <button id="start-btn"><i class="fa fa-play"></i></button>
@@ -67,6 +75,7 @@ Pomodoro Timer
         </div>
     </div>
 
+     <!--- Load javaScript code -->
     <script src="{% static 'js/timer.js' %}"></script>
 
 </body>

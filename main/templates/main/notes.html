@@ -6,20 +6,22 @@
 
 <body id='notes'>
   <h1>Notes</h1>
-
-  <div class="container-outline" style="margin-top: 3%;background-color: #F3F3F3;
-  justify-content: space-between;">
+  <!--- Note pages container -->
+  <div class="container-outline" style="margin-top: 3%;background-color: #F3F3F3; justify-content: space-between;">
     <div style="margin-right: 2%;">
+
+      <!--- Add page button container -->
       <div id="buttonContainer1">
-      <button type="submit" class="btn btn-lg outline w-100"
-        style="background-color: white; color: #898989; font-family: 'Rubik', sans-serif; font-weight: 500; font-size:auto; text-align: center; padding: 13px;"
-        onclick="replaceWithForm('buttonContainer1', 'formContainer1')">
-        <i class="fa-solid fa-plus fa-lg" style="margin-right: 7px;"></i> Add New Page
-      </button>
+        <button type="submit" class="btn btn-lg outline w-100"
+          style="background-color: white; color: #898989; font-family: 'Rubik', sans-serif; font-weight: 500; font-size:auto; text-align: center; padding: 13px;"
+          onclick="replaceWithForm('buttonContainer1', 'formContainer1')"> <!--- When button is clicked, replace button with form -->
+          <i class="fa-solid fa-plus fa-lg" style="margin-right: 7px;"></i> Add New Page
+        </button>
       </div>
 
+      <!--- Add page form container -->
       <div id="formContainer1" style="display: none; margin-bottom:2%;">
-        <form method="POST" action="{%url 'notes'%}">
+        <form method="POST" action="{%url 'notes'%}"> <!--- contents of the form is posted to the notes function  in views.py -->
           {%csrf_token%}
           
           <input name="task" id="taskInput1" type="text" class="btn-lg outline w-100 fs-6 mt-3"
@@ -30,12 +32,14 @@
           onclick="cancelOut('buttonContainer1', 'formContainer1', 'taskInput1')">
               Cancel
           </button>
+
           <button name="newItem" value="newItem" type="submit" class="btn btn-primary outline" style="padding: 0.8em; width: 15%; margin-left: 1%;padding: 13px;"
           onclick="handleFormSubmit('buttonContainer1', 'formContainer1', 'taskInput1')">
           Add
       </button>
     </div>
 
+    <!--- Notes page list -->
       <ul class="nav nav-pills flex-column mt-4">
         {% for note in user_notes %}
         <li class="nav-item py-2 py-sm-0 gap ">
@@ -55,6 +59,7 @@
     </div>
   </div>
 
+  <!--- Load javaScript code -->
   <script src="{% static 'js/notes.js' %}"></script>
 
 </body>

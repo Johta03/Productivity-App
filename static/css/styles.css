@@ -13,7 +13,6 @@ body {
 
 .btn:hover {
     border-color: #2f2bb6;
-    /* other styles for hover state */
 }
 
 .container-outline {
@@ -139,7 +138,6 @@ body {
 
 .ql-toolbar {
     margin-bottom: 1%;
-    /* Adjust the margin value as needed */
     border: 1px solid black;
     border-radius: 10px;
     background-color: white;
@@ -148,7 +146,6 @@ body {
 
 #editor-container {
     border: 1px solid #999;
-    /* Change the border color as needed */
     min-height: 70vh;
     box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
     background-color: white;
